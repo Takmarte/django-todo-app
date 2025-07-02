@@ -85,18 +85,19 @@ The project includes JWT token authentication endpoints as examples to demonstra
     "username": "your_username",
     "password": "your_password"
   }
+- Refresh token:                                             
+   POST /api/token/refresh/                                   
+   Body:
 
-Refresh token:                                             Use the access token in requests:
-POST /api/token/refresh/                                   Authorization: Bearer <your_access_token>
-Body:
+   ```json
+   {
+     "refresh": "your_refresh_token"
+   }
 
-json
-Always show details
 
-Copy
-{
-  "refresh": "your_refresh_token"
-}
+- Use the access token in requests:
+   Authorization: Bearer <your_access_token>
+
 
 Note: These endpoints are included for educational purposes and not fully integrated with the frontend views.
 
