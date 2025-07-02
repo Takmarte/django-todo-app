@@ -1,0 +1,33 @@
+{% extends "todo_app/base.html" %}
+
+{% block title %}
+   Add Category PAGE
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Add New Category</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Category Name</label>
+            <div class="col-sm-10">
+                <input type="text" name="name" class="form-control" value="{{ form.name.value|default_if_none:'' }}">
+            </div>
+        </div>
+
+        <div class="form-group row mt-4">
+            <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-warning">Add Category</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+
+
+

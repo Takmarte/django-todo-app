@@ -1,0 +1,37 @@
+{% extends "todo_app/base.html" %}
+
+{% block title %}
+   Home PAGE
+{% endblock title %}
+
+{% block content %}
+  
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4 text-center">TO-DO LIST</h1>
+    <p class="lead text-center">This is To-Do list for Python Django Web Development</p>
+    <div class="d-grid gap-2">
+      <a class="btn btn-primary" href="{% url 'todo' %}">All Tasks</a>
+    </div>
+    <div class="d-grid gap-2">
+      <a class="btn btn-outline-primary" href="{% url 'add_category' %}">Add New Category</a>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <h4 class="text-center mb-3">Categories</h4>
+  <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
+    {% for cat in categories %}
+      <a href="{% url 'category_view' cat.id %}" class="btn btn-outline-primary btn-lg">
+        {{ cat.name }}
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+  
+
+  
+{% endblock content %}

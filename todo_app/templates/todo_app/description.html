@@ -1,0 +1,33 @@
+{% extends "todo_app/base.html" %}
+
+{% block title %}
+    Task Detail PAGE
+{% endblock title %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="display-5">{{ todo.title }}</h1>
+    <p class="lead">{{ todo.description }}</p>
+    <p><strong>Create Date:</strong> {{ todo.date }}</p>
+    <p><strong>Deadline:</strong> {{ todo.deadline }}</p>
+    <p><strong>Is Finished?:</strong>
+        {% if todo.finished %}
+            <a class="btn btn-success" href="{% url 'yes_finish' todo.id %}">Yes</a>
+        {% else %}
+            <a class="btn btn-danger" href="{% url 'no_finish' todo.id %}">No</a>
+        {% endif %}
+    </p>
+    <p><strong>Finished at:</strong> 
+        {% if todo.finished_date %}
+            {{ todo.finished_date }}
+        {% else %}
+            Not finished yet
+        {% endif %}
+    </p>    
+    <div class="mt-3">
+        <a class="btn btn-warning" href="{% url 'update' todo.id %}">Update</a>
+        <a class="btn btn-danger" href="{% url 'delete' todo.id %}">Delete</a>
+        <a class="btn btn-primary" href="{% url 'index' %}">Back to List</a>
+    </div>
+</div>
+{% endblock content %}
