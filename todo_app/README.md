@@ -28,6 +28,11 @@ Lets users register a new account by entering a username and password.
 
 ![Register](screenshots/registerhtml.png)
 
+🧱 Base Template
+Provides the common layout structure shared across all pages.
+
+![All To-Dos](screenshots/basehtml.png)
+
 ### 📄 All To-Dos
 Lists to-dos for the logged-in user. Admins can see all tasks.
 
