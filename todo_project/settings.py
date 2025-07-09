@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
     'todo_app',
     'accounts',
     'rest_framework',  
@@ -134,4 +135,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+}
+
+UNFOLD = {
+"SITE_TITLE": "To-Do Admin",
+"SITE_HEADER": "To-Do Admin Panel",
+"SHOW_COUNTS": True,
+"DARK_MODE": True,
 }

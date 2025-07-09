@@ -1,11 +1,10 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.db import models
 from .models import Todos, Category
 from .forms import ListForm , CategoryForm
 from datetime import datetime
-from django.contrib.auth.decorators import login_required
-from django.db import models
-
 
 # Create your views here.
 
@@ -17,6 +16,7 @@ def todo(request):
         'todo_list': todo_list,
         'categories': categories
     })
+    
 @login_required
 def index(request):
     if request.user.is_authenticated:
@@ -54,6 +54,7 @@ def create(request):
     return render(request, "todo_app/create.html", {'form': form})
 
 
+
 @login_required
 def delete(request, Todos_id):
     todo = get_object_or_404(Todos, pk=Todos_id)
@@ -66,6 +67,7 @@ def delete(request, Todos_id):
         return redirect("index")
 
 
+@login_required
 def yes_finish(request,Todos_id):
     todo = Todos.objects.get(pk=Todos_id)
     todo.finished = False
@@ -74,6 +76,7 @@ def yes_finish(request,Todos_id):
     
     return redirect(request.META.get('HTTP_REFERER', 'index'))
 
+@login_required
 def no_finish(request,Todos_id):
     todo = Todos.objects.get(pk=Todos_id)
     todo.finished = True  
@@ -101,16 +104,19 @@ def update(request, Todos_id):
 
     return render(request, "todo_app/update.html", {'form': form})
 
-@login_required  
+
+    
+
+@login_required
 def description(request, id):
     todo = get_object_or_404(Todos, id=id)
     return render(request, 'todo_app/description.html', {'todo': todo})
 
 
+
 @login_required
 def category_view(request, category_id):
     category = get_object_or_404(Category, id=category_id)
-
     if request.user.is_authenticated:
         if request.user.is_superuser:
             todos = Todos.objects.filter(category=category).order_by('-date')
@@ -122,6 +128,8 @@ def category_view(request, category_id):
             ).order_by('-date')
     else:
         todos = Todos.objects.filter(category=category, is_private=False).order_by('-date')
+        
+    subcategories = Category.objects.filter(parent=category)    
 
     if request.method == "POST":
         form = ListForm(request.POST)
@@ -137,18 +145,36 @@ def category_view(request, category_id):
     return render(request, "todo_app/category_view.html", {
         'category': category,
         'todo_list': todos,
-        'form': form
+        'form': form,
+        'subcategories': subcategories,
     })
+    
+    
+
 @login_required
-def add_category(request):
+def add_category(request, parent_id=None):
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('index')  
+            new_category = form.save(commit=False)
+            if parent_id:
+                parent = get_object_or_404(Category, id=parent_id)
+                new_category.parent = parent
+            new_category.save()
+            
+            # Ekleme sonrası parent varsa oraya dön
+            if new_category.parent:
+                return redirect('category_view', category_id=new_category.parent.id)
+            return redirect('index')  # parent yoksa anasayfaya dön
+
     else:
         form = CategoryForm()
+        if parent_id:
+            parent = get_object_or_404(Category, id=parent_id)
+            form.fields['parent'].initial = parent
+
     return render(request, 'todo_app/add_category.html', {'form': form})
+
 
 
 @login_required
@@ -172,6 +198,7 @@ def add_todo_to_category(request, category_id):
     })
 
 
+@login_required
 def delete_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     category.delete()
@@ -185,3 +212,19 @@ def user_info(request):
     user = request.user
     return render(request, 'todo_app/user_info.html', {'user': user})
 
+
+@login_required
+def update_cat(request, Category_id):
+    category = get_object_or_404(Category, id=Category_id)
+    if request.method == "POST":
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            updated_category = form.save()
+            if updated_category.parent:
+                return redirect('category_view', category_id=updated_category.parent.id)
+            else:
+                return redirect('index')
+    else:
+        form = CategoryForm(instance=category)
+
+    return render(request, 'todo_app/update_category.html', {'form': form, 'category': category})

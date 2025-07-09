@@ -21,47 +21,63 @@ Below are the key pages of the todo_app interface. Each image is followed by a b
 ### 🔑 Login Page
 Enables users to log in with their credentials.
 
-![Login](../../screenshots/loginhtml.png)
+![Login](screenshots/loginhtml.png)
 
 ### ✍️ Register Page
 Lets users register a new account by entering a username and password.
 
-![Register](../../screenshots/registerhtml.png)
+![Register](screenshots/registerhtml.png)
 
 ### 📄 All To-Dos
 Lists to-dos for the logged-in user. Admins can see all tasks.
 
-![All To-Dos](../../screenshots/alltodoshtml.png)
+![All To-Dos](screenshots/alltodoshtml.png)
 
 ### ➕ Create To-Do
 Allows creation of a new to-do, category selection, and optional privacy marking.
 
-![Create To-Do](../../screenshots/createtodohtml.png)
+![Create To-Do](screenshots/createtodohtml.png)
 
 ### ✏️ Update To-Do
 Update a task's title, description, deadline, or finished state.
 
-![Update To-Do](../../screenshots/updatehtml.png)
+![Update To-Do](screenshots/updatehtml.png)
 
 ### 📂 Category View
 Show tasks under a specific category.
 
-![Category View](../../screenshots/categoryviewhtml.png)
+![Category View](screenshots/categoryviewhtml.png)
 
 ### ➕ Add Category
 Users can define new categories.
 
-![Add Category](../../screenshots/newcategoryhtml.png)
+![Add Category](screenshots/newcategoryhtml.png)
 
 ### 👤 User Info Page
 Displays current user details.
 
-![User Info](../../screenshots/userinformationhtml.png)
+![User Info](screenshots/userinformationhtml.png)
 
 ### ℹ️ About Page
 Static information page about the app.
 
-![About](../../screenshots/abouthtml.png)
+![About](screenshots/abouthtml.png)
+
+### 🗂️ Subcategory View
+View and manage subcategories within a category.
+
+![Subcategory View](screenshots/subcategoryview.png)
+
+### 🆕 Create To-Do Category
+Add a new category for organizing your to-dos.
+
+![Create To-Do Category](screenshots/createtodocategoryhtml.png)
+
+
+### 🔄 Update Category
+Modify the name or details of an existing category.
+
+![Update Category](screenshots/updatecategoryhtml.png)
 
 ---
 

@@ -5,27 +5,28 @@
 {% endblock title %}
 
 {% block content %}
-  
-<div class="jumbotron jumbotron-fluid">
+
+<div class="bg-light p-5 rounded">
   <div class="container">
     <h1 class="display-4 text-center">TO-DO LIST</h1>
     <p class="lead text-center">This is To-Do list for Python Django Web Development</p>
-    <div class="d-grid gap-2">
-      <a class="btn btn-info" href="{% url 'create' %}" role="button">Create New TO-DO</a>
+    <div class="text-center mt-4">
+      <a class="btn btn-outline-success" href="{% url 'create' %}" role="button">Create New TO-DO</a>
     </div>
   </div>
 </div>
 
-<div class="container">
+<div class="container mt-4">
+  {% if todo_list %}
   <table class="table table-bordered">
     <thead>
       <tr>
         <th scope="col">To-Do Name</th>
-        <th scope="col">Category</th> 
+        <th scope="col">Category</th>
+        <th scope="col">Deadline</th> 
         <th scope="col">Is Finished?</th>
-        <th scope="col">Deadline</th>
-        <th scope="col">Delete</th>
         <th scope="col">Update</th>
+        <th scope="col">Delete</th>
         <th scope="col">Finished Date</th>
       </tr>
     </thead>
@@ -33,33 +34,39 @@
       {% for todo in todo_list %} 
         <tr>
           <td>
-            <a class="btn btn-primary" href="{% url 'description' todo.id %}" role="button">{{ todo.title }}</a>
+            <a href="{% url 'description' todo.id %}" style="text-decoration: none; color: inherit;">
+              {{ todo.title }}
+            </a>
           </td>
           <td>
             {{ todo.category.name|default:"-" }}
           </td>
+          <td>{{ todo.deadline|date:"M d, Y H:i" }}</td>
           <td>          
             {% if todo.finished %}
               <a class="btn btn-success" href="{% url 'yes_finish' todo.id %}" role="button">Yes</a>
             {% else %}
               <a class="btn btn-warning" href="{% url 'no_finish' todo.id %}" role="button">No</a>
             {% endif %}
-          </td>
-          <td>{{ todo.deadline }}</td>
-          
-          <td>
-            <a class="btn btn-danger" href="{% url 'delete' todo.id %}" role="button">Delete</a>
-          </td>
-          
+          </td>          
           <td>
             <a class="btn btn-warning" href="{% url 'update' todo.id %}" role="button">Update</a>
           </td>
-          
-          <td>{{ todo.finished_date }}</td>
+          <td>
+            <a class="btn btn-danger" href="{% url 'delete' todo.id %}" role="button">Delete</a>
+          </td>
+          <td>{{ todo.finished_date|date:"M d, Y H:i" }}</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
+  {% else %}
+    <p class="text-center mt-4">There are no tasks yet. Click above to create one!</p>
+  {% endif %}
 </div>
-  
+
+<div class="text-center mt-4">
+    <a class="btn btn-success" href="{% url 'index' %}" role="button">Home Page</a>
+</div>
+
 {% endblock content %}

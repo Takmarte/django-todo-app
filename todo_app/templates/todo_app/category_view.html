@@ -6,59 +6,89 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">Tasks in the Category:  {{ category.name }}</h2>
+    <h2 class="mb-4 text-center">Category: {{ category.name }}</h2>
+    
+    {% if category.parent %}
+        <p class="text-center"><strong>Parent Category:</strong> {{ category.parent.name }}</p>
+        <div class="text-center mt-2">
+                <a class="btn btn-primary" href="{% url 'category_view' category.parent.id %}">
+                Go to {{ category.parent.name }} Category
+                </a>
+        </div>
+    {% endif %}
 
-    <div class="text-center mb-3">
-        <a href="{% url 'add_todo_to_category' category.id %}" class="btn btn-success">Add To-Do</a>
+    {% if category.subcategories.all %}
+    <div class="mt-4 text-center">
+        <h5>Subcategories:</h5>
+        <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+        {% for sub in category.subcategories.all %}
+            <a href="{% url 'category_view' sub.id %}" class="btn btn-outline-secondary">
+            {{ sub.name }}
+            </a>
+        {% endfor %}
+        </div>
     </div>
+    {% else %}
+    <p class="text-muted text-center mt-3">No subcategories found.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+      <a class="btn btn-outline-primary" href="{% url 'add_subcategory' category.id %}">Add Subcategory</a>
+    </div>
+
+     <h2 class="mb-4 text-center">Task in this Category: {{ category.name }}</h2>    
 
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col">To-Do Name</th>
-                <th scope="col">Is Finished?</th>
                 <th scope="col">DeadLine</th>
+                <th scope="col">Is Finished?</th>
                 <th scope="col">Update</th>
-                <th scope="col">Finished Date</th>
                 <th scope="col">Delete</th>
+                <th scope="col">Finished Date</th>
             </tr>
         </thead>
         <tbody>
             {% for todo in todo_list %}
-                {% if todo.finished %}
-                    <tr>
-                        <td><a class="btn btn-primary" href="{% url 'description' todo.id %}" role="button">{{ todo.title }}</a></td>
-                        <td><a class="btn btn-success" href="{% url 'yes_finish' todo.id %}" role="button">Yes</a></td>
-                        <td>{{ todo.deadline }}</td>           
-                        <td><a class="btn btn-warning" href="{% url 'update' todo.id %}" role="button">Update</a></td>
-                        <td>{{ todo.finished_date }}</td>
-                        <td><a class="btn btn-danger" href="{% url 'delete' todo.id %}" role="button">Delete</a></td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td><a class="btn btn-primary" href="{% url 'description' todo.id %}" role="button">{{ todo.title }}</a></td>
-                        <td><a class="btn btn-warning" href="{% url 'no_finish' todo.id %}" role="button">No</a></td>
-                        <td>{{ todo.deadline }}</td>
-                        <td><a class="btn btn-warning" href="{% url 'update' todo.id %}" role="button">Update</a></td>
-                        <td>{{ todo.finished_date }}</td>
-                        <td><a class="btn btn-danger" href="{% url 'delete' todo.id %}" role="button">Delete</a></td>
-                    </tr>
-                {% endif %}
+                <tr>
+                    <td>
+                        <a href="{% url 'description' todo.id %}" style="text-decoration: none; color: inherit;">
+                            {{ todo.title }}
+                        </a>
+                    </td>
+                    <td>{{ todo.deadline }}</td>  
+                    <td>
+                        {% if todo.finished %}
+                            <a class="btn btn-success" href="{% url 'yes_finish' todo.id %}" role="button">Yes</a>
+                        {% else %}
+                            <a class="btn btn-warning" href="{% url 'no_finish' todo.id %}" role="button">No</a>
+                        {% endif %}
+                    </td>
+                    <td><a class="btn btn-warning" href="{% url 'update' todo.id %}" role="button">Update</a></td>
+                    <td><a class="btn btn-danger" href="{% url 'delete' todo.id %}" role="button">Delete</a></td>
+                    <td>{{ todo.finished_date }}</td>
+                </tr>
             {% empty %}
                 <tr><td colspan="6">There are no tasks in this category yet.</td></tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <div class="text-center mt-3">
-        <a class="btn btn-outline-primary" href="{% url 'index' %}" role="button">Home Page</a>
+    <div class="text-center mb-3">
+        <a href="{% url 'add_todo_to_category' category.id %}" class="btn btn-success">Add Task</a>
     </div>
 
     <div class="text-center mt-3">
         <form method="POST" action="{% url 'delete_category' category.id %}">
             {% csrf_token %}
+            <a class="btn btn-warning" href="{% url 'update_cat' category.id %}" role="button">Update Category</a>
             <button type="submit" class="btn btn-danger" onclick="return confirm('Bu kategoriyi silmek istediğinize emin misiniz?')">Delete Category</button>
         </form>
+    </div>
+
+    <div class="text-center mt-3">
+        <a class="btn btn-primary" href="{% url 'index' %}" role="button">Home Page</a>
     </div>
 </div>
 {% endblock %}

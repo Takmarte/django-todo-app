@@ -8,21 +8,24 @@ class ListForm(forms.ModelForm):
         model = Todos
         fields = ["title", "description", "finished", "date", "deadline", "category", "is_private"]
         widgets = {
-            'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local'})
+            'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'is_private': forms.CheckboxInput(attrs={'class': 'form-check-input', 'id': 'id_is_private'}),
         }
 
     def __init__(self, *args, **kwargs):
         super(ListForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
-        self.fields['is_private'].widget.attrs.update({'class': 'form-check-input'})
+        self.fields['category'].queryset = Category.objects.all().order_by('parent__name', 'name')
 
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name']
+        fields = ['name','parent']
 
     def __init__(self, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
+            
+            

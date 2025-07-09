@@ -1,37 +1,40 @@
 {% extends "todo_app/base.html" %}
 
 {% block title %}
-   Home PAGE
+  Home PAGE
 {% endblock title %}
 
 {% block content %}
-  
-
-<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <h1 class="display-4 text-center">TO-DO LIST</h1>
-    <p class="lead text-center">This is To-Do list for Python Django Web Development</p>
-    <div class="d-grid gap-2">
-      <a class="btn btn-primary" href="{% url 'todo' %}">All Tasks</a>
-    </div>
-    <div class="d-grid gap-2">
-      <a class="btn btn-outline-primary" href="{% url 'add_category' %}">Add New Category</a>
-    </div>
+<div class="jumbotron jumbotron-fluid bg-light py-5">
+  <div class="container text-center">
+    <h1 class="display-4">TO-DO LIST</h1>
+    <p class="lead">This is To-Do list for Python Django Web Development</p>
   </div>
 </div>
 
-<div class="container mt-4">
-  <h4 class="text-center mb-3">Categories</h4>
-  <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
-    {% for cat in categories %}
-      <a href="{% url 'category_view' cat.id %}" class="btn btn-outline-primary btn-lg">
-        {{ cat.name }}
-      </a>
-    {% endfor %}
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">Categories</h4>
+    <a class="btn btn-outline-primary" href="{% url 'add_category' %}">Add New Category</a>
+  </div>
+
+  {% for cat in categories %}
+    {% if not cat.parent %}
+      <div class="mb-4">
+        <a href="{% url 'category_view' cat.id %}" class="btn btn-success btn-lg mb-2">{{ cat.name }}</a>
+        <div class="ms-4 d-flex flex-wrap gap-2">
+          {% for subcat in categories %}
+            {% if subcat.parent == cat %}
+              <a href="{% url 'category_view' subcat.id %}" class="btn btn-secondary btn-sm">{{ subcat.name }}</a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <div class="text-center mt-5">
+    <a class="btn btn-primary btn-lg" href="{% url 'todo' %}">All Tasks</a>
   </div>
 </div>
-
-  
-
-  
 {% endblock content %}

@@ -67,3 +67,38 @@ The project follows the standard Django layout:
 
 - This project is built for educational purposes only.  
 - It was created as part of my internship to improve backend development skills using Django.
+
+
+## 🔐 JWT Authentication (For Learning Purposes)
+
+The project includes JWT token authentication endpoints as examples to demonstrate how JWT works with Django REST Framework.
+
+- Obtain token:  
+  POST /api/token/  
+  Body:
+  ```json
+  {
+    "username": "your_username",
+    "password": "your_password"
+  }
+- Refresh token:                                             
+   POST /api/token/refresh/                                   
+   Body:
+
+   ```json
+   {
+     "refresh": "your_refresh_token"
+   }
+
+
+- Use the access token in requests:
+   Authorization: Bearer <your_access_token>
+
+
+Note: These endpoints are included for educational purposes and not fully integrated with the frontend views.
+
+## 🛠️ Tech Stack
+
+Django REST Framework
+
+JWT (djangorestframework-simplejwt)

@@ -28,6 +28,9 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/', include(router.urls)),
+    path('category/<int:parent_id>/add-category/', views.add_category, name='add_subcategory'),
+    path('category/<int:Category_id>/update/', views.update_cat, name='update_cat')
+
     
     
 ]

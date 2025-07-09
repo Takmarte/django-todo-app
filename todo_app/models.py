@@ -4,9 +4,11 @@ from datetime import datetime
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=100)
-   
+    parent = models.ForeignKey('self',on_delete=models.CASCADE,null=True,blank=True,related_name='subcategories')
+ 
     def __str__(self):
-        return self.name
+        prefix = f"{self.parent} > " if self.parent else ""
+        return f"{prefix}{self.name}"
     
 class Todos(models.Model):
     title = models.CharField(max_length=100,blank=True)
@@ -20,4 +22,3 @@ class Todos(models.Model):
     is_private = models.BooleanField(default=True)
 
 
-#İç İçe yapılacak ayrı ayrı değil
