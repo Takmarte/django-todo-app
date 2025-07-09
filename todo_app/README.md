@@ -67,7 +67,10 @@ Displays current user details.
 Static information page about the app.
 
 ![About](screenshots/abouthtml.png)
+<<<<<<< HEAD
 
+=======
+>>>>>>> c6621f2b1775ee89a852e9d73f487cd87805a28b
 
 ### 🗂️ Subcategory View
 View and manage subcategories within a category.
