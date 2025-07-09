@@ -69,13 +69,13 @@ The project follows the standard Django layout:
 - It was created as part of my internship to improve backend development skills using Django.
 
 
-<<<<<<< HEAD
+
 =======
 
 
 
 
->>>>>>> 2e387a43ec55b02ba8d74834d3508d34bd6560aa
+
 ## 🔐 JWT Authentication (For Learning Purposes)
 
 The project includes JWT token authentication endpoints as examples to demonstrate how JWT works with Django REST Framework.
@@ -109,8 +109,8 @@ Note: These endpoints are included for educational purposes and not fully integr
 Django REST Framework
 
 JWT (djangorestframework-simplejwt)
-<<<<<<< HEAD
+
 =======
 
 
->>>>>>> 2e387a43ec55b02ba8d74834d3508d34bd6560aa
+
