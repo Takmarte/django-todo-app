@@ -28,6 +28,11 @@ Lets users register a new account by entering a username and password.
 
 ![Register](screenshots/registerhtml.png)
 
+### 🧱 Home Page
+Provides the common layout structure shared across all pages.
+
+![Home Page](screenshots/basehtml.png)
+
 ### 📄 All To-Dos
 Lists to-dos for the logged-in user. Admins can see all tasks.
 
@@ -62,12 +67,12 @@ Displays current user details.
 Static information page about the app.
 
 ![About](screenshots/abouthtml.png)
-<<<<<<< HEAD
+
 
 ### 🗂️ Subcategory View
 View and manage subcategories within a category.
 
-![Subcategory View](screenshots/subcategoryview.png)
+![Subcategory View](screenshots/subcategoryviewhtml.png)
 
 ### 🆕 Create To-Do Category
 Add a new category for organizing your to-dos.
@@ -79,8 +84,9 @@ Add a new category for organizing your to-dos.
 Modify the name or details of an existing category.
 
 ![Update Category](screenshots/updatecategoryhtml.png)
+
 =======
->>>>>>> 2e387a43ec55b02ba8d74834d3508d34bd6560aa
+
 
 ---
 
