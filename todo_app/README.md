@@ -67,7 +67,7 @@ Static information page about the app.
 ### 🗂️ Subcategory View
 View and manage subcategories within a category.
 
-![Subcategory View](screenshots/subcategoryview.png)
+![Subcategory View](screenshots/subcategoryviewhtml.png)
 
 ### 🆕 Create To-Do Category
 Add a new category for organizing your to-dos.
