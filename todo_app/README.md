@@ -62,6 +62,7 @@ Displays current user details.
 Static information page about the app.
 
 ![About](screenshots/abouthtml.png)
+<<<<<<< HEAD
 
 ### 🗂️ Subcategory View
 View and manage subcategories within a category.
@@ -78,6 +79,8 @@ Add a new category for organizing your to-dos.
 Modify the name or details of an existing category.
 
 ![Update Category](screenshots/updatecategoryhtml.png)
+=======
+>>>>>>> 2e387a43ec55b02ba8d74834d3508d34bd6560aa
 
 ---
 
