@@ -1,73 +1,77 @@
 {% extends "todo_app/base.html" %}
 
 {% block title %}
-   Update PAGE
+  Update To-Do
 {% endblock title %}
 
-
-
 {% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
 
-<div class="container mt-4"> <h2>Update To-Do</h2> <form method="POST"> {% csrf_token %}    
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label">To-Do Title</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" name="title" value="{{ form.title.value|default_if_none:'' }}">
-        </div>
-    </div>
+      <!-- Başlık -->
+      <div class="text-center mb-4">
+        <h3 class="fw-bold">Update To-Do</h3>
+      </div>
 
-    <div class="form-group row mt-3">
-        <label class="col-sm-2 col-form-label">Description</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" name="description" value="{{ form.description.value|default_if_none:'' }}">
-        </div>
-    </div>
+      <!-- Form Kartı -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form method="POST" novalidate>
+            {% csrf_token %}
 
-    <div class="form-group row mt-3">
-        <label class="col-sm-2 col-form-label">Deadline</label>
-        <div class="col-sm-10">
-            <input type="datetime-local" name="deadline" class="form-control" value="{{ form.deadline.value|date:'Y-m-d\\TH:i' }}">
-        </div>
-    </div>
-   
-    <div class="form-group row mt-3">
-        <label class="col-sm-2 col-form-label">Kategori</label>
-        <div class="col-sm-10">
-            <select name="category" class="form-select" id="id_category">
-                {% for cat in form.fields.category.queryset %}
-                    <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == form.category.value|stringformat:"s" %}selected{% endif %}>
-                        {{ cat.name }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-    
-    <div class="form-group row mt-3">
-        <label class="col-sm-2 col-form-label">Is Finished?</label>
-        <div class="col-sm-10">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="finished" {% if form.finished.value %}checked{% endif %}>
-                <label class="form-check-label">Yes</label>
+            <div class="mb-3">
+              <label for="{{ form.title.id_for_label }}" class="form-label">To-Do Title</label>
+              {{ form.title }}
+              {% if form.title.errors %}
+                <div class="text-danger small">{{ form.title.errors|striptags }}</div>
+              {% endif %}
             </div>
-        </div>
-    </div>
 
-    <div class="form-group row mt-3 ">
-    <label class="col-sm-2 col-form-label" for="id_is_private">Is Private</label>
-        <div class="col-sm-10">
-            <div class="form-check ">
-                <input class="form-check-input" type="checkbox" name="id_is_private" {{ form.is_private }}>
-                <label class="form-check-label" for="id_is_private">Only visible to me</label>
+            <div class="mb-3">
+              <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+              {{ form.description }}
+              {% if form.description.errors %}
+                <div class="text-danger small">{{ form.description.errors|striptags }}</div>
+              {% endif %}
             </div>
-        </div>
-    </div>
 
-    <div class="form-group row mt-4">
-        <div class="col-sm-10 offset-sm-2">
-            <button type="submit" class="btn btn-warning">Update</button>
+            <div class="mb-3">
+              <label for="{{ form.deadline.id_for_label }}" class="form-label">Deadline</label>
+              {{ form.deadline }}
+              {% if form.deadline.errors %}
+                <div class="text-danger small">{{ form.deadline.errors|striptags }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.category.id_for_label }}" class="form-label">Category</label>
+              {{ form.category }}
+              {% if form.category.errors %}
+                <div class="text-danger small">{{ form.category.errors|striptags }}</div>
+              {% endif %}
+            </div>
+
+            <div class="form-check mb-3">
+              {{ form.finished }}
+              <label for="{{ form.finished.id_for_label }}" class="form-check-label">Is Finished?</label>
+            </div>
+
+            <div class="form-check mb-4">
+              {{ form.is_private }}
+              <label for="{{ form.is_private.id_for_label }}" class="form-check-label">Only visible to me</label>
+            </div>
+
+            <!-- Butonlar -->
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-warning">Update</button>
+            </div>
+
+          </form>
         </div>
+      </div>
+
     </div>
-</form>
-</div> 
+  </div>
+</div>
 {% endblock %}

@@ -1,21 +1,19 @@
-
 {% extends "todo_app/base.html" %}
 
 {% block title %}
-   ABOUT PAGE
+  ABOUT PAGE
 {% endblock title %}
 
 {% block content %}
-   <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-        <h1 class="display-3"><center>ABOUT</center></h1>
-        <p class="lead"><center>This is To-Do list for python Django Web Development,</center></p>
-        <p class="lead"><center>You can use this TO-DO List for your Django projects,</center></p>
-        <p class="lead fs-4 text-center">This project is an example application developed as part of my efforts to learn and practice Django and Python.</p>
-        <br><br>
-        <div class="text-center">
-            <a class="btn btn-success" href="{% url 'index' %}" role="button">Home Page</a>
-        </div>
+<div class="bg-light p-5 rounded shadow-sm">
+  <div class="container text-center">
+    <h1 class="display-4 mb-4">About</h1>
+    <p class="lead">This is a To-Do list built with Python & Django.</p>
+    <p class="lead">You can use this To-Do List in your Django projects.</p>
+    <p class="fs-5 text-muted">This project is an example application developed as part of my learning and practice with Django and Python.</p>
+    <div class="mt-5">
+      <a class="btn btn-success btn-lg" href="{% url 'index' %}">Home Page</a>
     </div>
+  </div>
 </div>
 {% endblock content %}

@@ -1,16 +1,13 @@
 {% extends "todo_app/base.html" %}
 {% load form_tags %}
 
-
-{% block title %}
-  Add Category PAGE
-{% endblock title %}
+{% block title %}Add Subtask{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
   <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
-      <h4 class="mb-0">Add New Category</h4>
+    <div class="card-header bg-success text-white">
+      <h4 class="mb-0">Add Subtask to "{{ todo.title }}"</h4>
     </div>
     <div class="card-body">
       <form method="POST" novalidate>
@@ -26,8 +23,9 @@
             {% endif %}
           </div>
         {% endfor %}
-        <button type="submit" class="btn btn-warning">Add Category</button>
-        <a href="{% url 'index' %}" class="btn btn-secondary ms-2">Cancel</a>
+
+        <button type="submit" class="btn btn-success">Add Subtask</button>
+        <a href="{{ next }}" class="btn btn-secondary ms-2">Cancel</a>
       </form>
     </div>
   </div>

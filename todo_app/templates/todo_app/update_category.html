@@ -1,32 +1,52 @@
 {% extends "todo_app/base.html" %}
 
-{% block title %}
-Update Category
-{% endblock title %}
+{% block title %}Update Category{% endblock title %}
 
 {% block content %}
-<div class="container mt-5"> 
-    <div class="row justify-content-center"> 
-        <div class="col-md-8"> 
-            <h2 class="text-center mb-4">Update Category: {{ category.name }}</h2> 
-                <form method="POST"> 
-                    {% csrf_token %}
-                    <div class="form-group mb-3">
-                        <label for="id_name">Category Name</label>
-                        {{ form.name }}
-                    </div>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
 
-                    <div class="form-group mb-4">
-                        <label for="id_parent">Parent Category</label>
-                        {{ form.parent }}
-                    </div>
+      <!-- Başlık -->
+      <div class="text-center mb-4">
+        <h2 class="fw-bold">Update Category</h2>
+        <p class="text-muted">Editing: <strong>{{ category.name }}</strong></p>
+      </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Update Category</button>
-                        <a href="{% url 'index' %}" class="btn btn-secondary mt-2">Cancel</a>
-                    </div>
-                </form>
+      <!-- Form -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form method="POST" novalidate>
+            {% csrf_token %}
+
+            <!-- Kategori Adı -->
+            <div class="mb-3">
+              <label for="id_name" class="form-label">Category Name</label>
+              {{ form.name }}
+              {% if form.name.errors %}
+                <div class="text-danger small">{{ form.name.errors|striptags }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Üst Kategori -->
+            <div class="mb-3">
+              <label for="id_parent" class="form-label">Parent Category (optional)</label>
+              {{ form.parent }}
+              {% if form.parent.errors %}
+                <div class="text-danger small">{{ form.parent.errors|striptags }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Butonlar -->
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="btn btn-warning">Update Category</button>
+              <a href="{% url 'index' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </form>
         </div>
-    </div> 
-</div> 
+      </div>
+
+    </div>
+  </div>
+</div>
 {% endblock %}

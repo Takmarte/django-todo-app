@@ -1,72 +1,87 @@
 {% extends "todo_app/base.html" %}
 
-{% block title %}
-   Todo PAGE
-{% endblock title %}
+{% block title %} To-Do Page {% endblock title %}
 
 {% block content %}
 
-<div class="bg-light p-5 rounded">
-  <div class="container">
-    <h1 class="display-4 text-center">TO-DO LIST</h1>
-    <p class="lead text-center">This is To-Do list for Python Django Web Development</p>
-    <div class="text-center mt-4">
-      <a class="btn btn-outline-success" href="{% url 'create' %}" role="button">Create New TO-DO</a>
-    </div>
+<!-- Başlık -->
+<div class="bg-light p-5 rounded shadow-sm mb-4">
+  <div class="container text-center">
+    <h1 class="display-5 fw-bold">📝 TO-DO LIST</h1>
+    <p class="lead mb-0">Grouped by your daily plans</p>
   </div>
 </div>
 
-<div class="container mt-4">
-  {% if todo_list %}
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th scope="col">To-Do Name</th>
-        <th scope="col">Category</th>
-        <th scope="col">Deadline</th> 
-        <th scope="col">Is Finished?</th>
-        <th scope="col">Update</th>
-        <th scope="col">Delete</th>
-        <th scope="col">Finished Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for todo in todo_list %} 
-        <tr>
-          <td>
-            <a href="{% url 'description' todo.id %}" style="text-decoration: none; color: inherit;">
-              {{ todo.title }}
-            </a>
-          </td>
-          <td>
-            {{ todo.category.name|default:"-" }}
-          </td>
-          <td>{{ todo.deadline|date:"M d, Y H:i" }}</td>
-          <td>          
-            {% if todo.finished %}
-              <a class="btn btn-success" href="{% url 'yes_finish' todo.id %}" role="button">Yes</a>
-            {% else %}
-              <a class="btn btn-warning" href="{% url 'no_finish' todo.id %}" role="button">No</a>
-            {% endif %}
-          </td>          
-          <td>
-            <a class="btn btn-warning" href="{% url 'update' todo.id %}" role="button">Update</a>
-          </td>
-          <td>
-            <a class="btn btn-danger" href="{% url 'delete' todo.id %}" role="button">Delete</a>
-          </td>
-          <td>{{ todo.finished_date|date:"M d, Y H:i" }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<!-- Günlük Listeler -->
+<div class="container">
+  {% if daily_lists %}
+    {% for dlist in daily_lists %}
+      <div class="card mb-5 shadow-sm">
+        <!-- Kart Başlığı -->
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ dlist.name }}</strong>
+            <small class="ms-2 text-white-50">({{ dlist.date }})</small>
+          </div>
+          <a class="btn btn-outline-light btn-sm" href="{% url 'daily_list_detail' dlist.id %}">Manage</a>
+        </div>
+
+        <!-- Görev Listesi -->
+        <div class="card-body p-0">
+          {% if dlist.todos.all|length > 0 %}
+            <table class="table table-bordered table-hover mb-0">
+              <thead class="table-light text-center">
+                <tr>
+                  <th>To-Do Name</th>
+                  <th>Deadline</th>
+                  <th>Finished?</th>
+                  <th>Update</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for todo in dlist.todos.all %}
+                <tr class="text-center align-middle">
+                  <td class="text-start ps-3">
+                    <a href="{% url 'description' todo.id %}" class="text-decoration-none text-dark fw-semibold">
+                      {{ todo.title }}
+                    </a>
+                  </td>
+                  <td>{{ todo.deadline|default:"—" }}</td>
+                  <td>
+                    {% if todo.finished %}
+                      <a class="btn btn-success btn-sm" href="{% url 'yes_finish' todo.id %}">Yes</a>
+                    {% else %}
+                      <a class="btn btn-outline-warning btn-sm" href="{% url 'no_finish' todo.id %}">No</a>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <a class="btn btn-outline-secondary btn-sm" href="{% url 'update' todo.id %}">Update</a>
+                  </td>
+                  <td>
+                    <form method="POST" action="{% url 'delete' todo.id %}" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <div class="p-3 text-muted">No tasks in this list.</div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
   {% else %}
-    <p class="text-center mt-4">There are no tasks yet. Click above to create one!</p>
+    <p class="text-center text-muted">You don't have any Daily Lists yet.</p>
   {% endif %}
 </div>
 
-<div class="text-center mt-4">
-    <a class="btn btn-success" href="{% url 'index' %}" role="button">Home Page</a>
+<!-- Ana Sayfa Butonu -->
+<div class="text-center mt-5">
+  <a class="btn btn-primary btn-lg" href="{% url 'index' %}">← Back to Home</a>
 </div>
 
 {% endblock content %}

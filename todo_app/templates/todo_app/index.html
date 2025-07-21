@@ -1,40 +1,55 @@
 {% extends "todo_app/base.html" %}
 
-{% block title %}
-  Home PAGE
-{% endblock title %}
+{% block title %}Home{% endblock title %}
 
 {% block content %}
-<div class="jumbotron jumbotron-fluid bg-light py-5">
-  <div class="container text-center">
-    <h1 class="display-4">TO-DO LIST</h1>
-    <p class="lead">This is To-Do list for Python Django Web Development</p>
+<div class="container my-5">
+  <!-- Hero Section -->
+  <div class="text-center mb-5">
+    <h1 class="display-4 fw-bold">📝 TO-DO LIST</h1>
+    <p class="lead text-muted">Organize your tasks efficiently with this Django-powered app.</p>
+    <a href="{% url 'todo' %}" class="btn btn-primary btn-lg mt-3">📋 View All Tasks</a>
   </div>
-</div>
 
-<div class="container mt-5">
+  <!-- Categories Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0">Categories</h4>
-    <a class="btn btn-outline-primary" href="{% url 'add_category' %}">Add New Category</a>
+    <h3 class="fw-semibold">📂 Categories</h3>
+    <a href="{% url 'add_category' %}" class="btn btn-outline-primary">+ Add New Category</a>
   </div>
 
-  {% for cat in categories %}
-    {% if not cat.parent %}
-      <div class="mb-4">
-        <a href="{% url 'category_view' cat.id %}" class="btn btn-success btn-lg mb-2">{{ cat.name }}</a>
-        <div class="ms-4 d-flex flex-wrap gap-2">
-          {% for subcat in categories %}
-            {% if subcat.parent == cat %}
-              <a href="{% url 'category_view' subcat.id %}" class="btn btn-secondary btn-sm">{{ subcat.name }}</a>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
-  {% endfor %}
-
-  <div class="text-center mt-5">
-    <a class="btn btn-primary btn-lg" href="{% url 'todo' %}">All Tasks</a>
-  </div>
+  <!-- Collapsible Category Buttons -->
+  {% if categories %}
+    <div class="accordion" id="categoryAccordion">
+      {% for cat in categories %}
+        {% if not cat.parent %}
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ cat.id }}">
+              <button class="accordion-button collapsed py-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ cat.id }}" aria-expanded="false" aria-controls="collapse{{ cat.id }}">
+                {{ cat.name }}
+              </button>
+            </h2>
+            <div id="collapse{{ cat.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ cat.id }}" data-bs-parent="#categoryAccordion">
+              <div class="accordion-body">
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                  {% for subcat in categories %}
+                    {% if subcat.parent == cat %}
+                      <a href="{% url 'category_view' subcat.id %}" class="btn btn-sm btn-outline-secondary">
+                        {{ subcat.name }}
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <a href="{% url 'category_view' cat.id %}" class="btn btn-sm btn-outline-primary">Go to Category</a>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      No categories found. Start by <a href="{% url 'add_category' %}">adding one</a>.
+    </div>
+  {% endif %}
 </div>
-{% endblock content %}
+{% endblock %}

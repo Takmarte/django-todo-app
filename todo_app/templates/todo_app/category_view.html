@@ -1,94 +1,169 @@
 {% extends "todo_app/base.html" %}
+{% load static %}
 
 {% block title %}
   {{ category.name }} PAGE
 {% endblock title %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4 text-center">Category: {{ category.name }}</h2>
-    
-    {% if category.parent %}
-        <p class="text-center"><strong>Parent Category:</strong> {{ category.parent.name }}</p>
-        <div class="text-center mt-2">
-                <a class="btn btn-primary" href="{% url 'category_view' category.parent.id %}">
-                Go to {{ category.parent.name }} Category
-                </a>
-        </div>
-    {% endif %}
+<div class="container my-5">
+  <h2 class="text-center mb-3">{{ category.name }}</h2>
 
-    {% if category.subcategories.all %}
-    <div class="mt-4 text-center">
-        <h5>Subcategories:</h5>
-        <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-        {% for sub in category.subcategories.all %}
-            <a href="{% url 'category_view' sub.id %}" class="btn btn-outline-secondary">
-            {{ sub.name }}
-            </a>
-        {% endfor %}
-        </div>
+  {% if category.parent %}
+    <p class="text-center">
+      <strong>Parent Category:</strong> {{ category.parent.name }}
+    </p>
+    <div class="text-center mb-4">
+      <a href="{% url 'category_view' category.parent.id %}" class="btn btn-outline-primary">
+        ← Go to {{ category.parent.name }}
+      </a>
     </div>
-    {% else %}
-    <p class="text-muted text-center mt-3">No subcategories found.</p>
-    {% endif %}
+  {% endif %}
 
+  {% if category.subcategories.exists %}
     <div class="text-center mt-4">
-      <a class="btn btn-outline-primary" href="{% url 'add_subcategory' category.id %}">Add Subcategory</a>
+      <h5>Subcategories</h5>
+      <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+        {% for sub in category.subcategories.all %}
+          <a href="{% url 'category_view' sub.id %}" class="btn btn-outline-secondary">{{ sub.name }}</a>
+        {% endfor %}
+      </div>
     </div>
+  {% else %}
+    <p class="text-muted text-center mt-3">No subcategories found.</p>
+  {% endif %}
 
-     <h2 class="mb-4 text-center">Task in this Category: {{ category.name }}</h2>    
+  <div class="text-center my-4">
+    <a class="btn btn-outline-success" href="{% url 'add_subcategory' category.id %}">+ Add Subcategory</a>
+  </div>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">To-Do Name</th>
-                <th scope="col">DeadLine</th>
-                <th scope="col">Is Finished?</th>
-                <th scope="col">Update</th>
-                <th scope="col">Delete</th>
-                <th scope="col">Finished Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for todo in todo_list %}
-                <tr>
-                    <td>
-                        <a href="{% url 'description' todo.id %}" style="text-decoration: none; color: inherit;">
+  <h3 class="text-center mt-5 mb-4">Tasks in {{ category.name }}</h3>
+
+  {% if daily_lists %}
+    {% for dlist in daily_lists %}
+      <div class="row justify-content-center mb-4">
+        <div class="col-md-10">
+          <div class="card shadow-sm">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+              <strong>{{ dlist.name }}</strong>
+              <a href="{% url 'daily_list_detail' dlist.id %}" class="btn btn-sm btn-outline-primary">Manage</a>
+            </div>
+            <div class="card-body p-0">
+              {% if dlist.todos.all %}
+                <table class="table mb-0 text-nowrap align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="text-start">Title</th>
+                      <th class="text-center" style="width: 180px;">Deadline</th>
+                      <th class="text-center" style="width: 100px;">Status</th>
+                      <th class="text-center" style="width: 120px;">Actions</th>
+                      <th class="text-center" style="width: 200px;">Progress</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for todo in dlist.todos.all %}
+                      <tr>
+                        <td class="text-start">
+                          <a href="{% url 'description' todo.id %}" class="text-decoration-none text-dark">
                             {{ todo.title }}
-                        </a>
-                    </td>
-                    <td>{{ todo.deadline }}</td>  
-                    <td>
-                        {% if todo.finished %}
-                            <a class="btn btn-success" href="{% url 'yes_finish' todo.id %}" role="button">Yes</a>
-                        {% else %}
-                            <a class="btn btn-warning" href="{% url 'no_finish' todo.id %}" role="button">No</a>
-                        {% endif %}
-                    </td>
-                    <td><a class="btn btn-warning" href="{% url 'update' todo.id %}" role="button">Update</a></td>
-                    <td><a class="btn btn-danger" href="{% url 'delete' todo.id %}" role="button">Delete</a></td>
-                    <td>{{ todo.finished_date }}</td>
-                </tr>
-            {% empty %}
-                <tr><td colspan="6">There are no tasks in this category yet.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                          </a>
+                        </td>
+                        <td class="text-center">{{ todo.deadline|date:"Y-m-d H:i" }}</td>
+                        <td class="text-center">
+                          <button 
+                            class="btn btn-sm toggle-status-btn {% if todo.finished %}btn-success{% else %}btn-warning{% endif %}" 
+                            data-id="{{ todo.id }}">
+                            {% if todo.finished %}Yes{% else %}No{% endif %}
+                          </button>
+                        </td>
+                        <td class="text-center">
+                          <div class="d-flex justify-content-center gap-2">
+                            <a href="{% url 'update' todo.id %}" class="btn btn-outline-secondary btn-sm">✎</a>
+                            <form method="POST" action="{% url 'delete' todo.id %}" class="d-inline">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this task?')">🗑</button>
+                            </form>
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <div class="progress w-100" style="height: 20px;">
+                            <div class="progress-bar bg-success"
+                                role="progressbar"
+                                style="width: {{ todo.progress }}%;"
+                                aria-valuenow="{{ todo.progress }}"
+                                aria-valuemin="0"
+                                aria-valuemax="100">
+                              {{ todo.progress }}%
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% else %}
+                <p class="p-3 text-center text-muted">No tasks for this date.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-center text-muted">There are no task lists in this category yet.</p>
+  {% endif %}
 
-    <div class="text-center mb-3">
-        <a href="{% url 'add_todo_to_category' category.id %}" class="btn btn-success">Add Task</a>
-    </div>
+  <div class="text-center mt-4">
+    <a class="btn btn-success" href="{% url 'add_todo_to_category' category.id %}">+ Add Task</a>
+  </div>
 
-    <div class="text-center mt-3">
-        <form method="POST" action="{% url 'delete_category' category.id %}">
-            {% csrf_token %}
-            <a class="btn btn-warning" href="{% url 'update_cat' category.id %}" role="button">Update Category</a>
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Bu kategoriyi silmek istediğinize emin misiniz?')">Delete Category</button>
-        </form>
-    </div>
+  <div class="text-center mt-3 d-flex flex-wrap justify-content-center gap-2">
+    <a class="btn btn-warning" href="{% url 'update_cat' category.id %}">Update Category</a>
+    <form method="POST" action="{% url 'delete_category' category.id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger"
+        onclick="return confirm('Are you sure you want to delete this category?')">Delete Category</button>
+    </form>
+  </div>
 
-    <div class="text-center mt-3">
-        <a class="btn btn-primary" href="{% url 'index' %}" role="button">Home Page</a>
-    </div>
+  <div class="text-center mt-4">
+    <a class="btn btn-outline-secondary" href="{% url 'index' %}">← Back to Home</a>
+  </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const buttons = document.querySelectorAll('.toggle-status-btn');
+  buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      const todoId = this.dataset.id;
+      const btn = this;
+      fetch(`/toggle_finish_status/${todoId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          btn.textContent = data.finished ? 'Yes' : 'No';
+          btn.classList.toggle('btn-success', data.finished);
+          btn.classList.toggle('btn-warning', !data.finished);
+        } else {
+          alert("Yetkiniz yok veya işlem başarısız.");
+        }
+      })
+      .catch(err => {
+        console.error("Status toggle hatası:", err);
+        alert("Bir hata oluştu.");
+      });
+    });
+  });
+});
+
+</script>
 {% endblock %}

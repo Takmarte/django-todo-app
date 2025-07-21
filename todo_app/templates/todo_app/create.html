@@ -1,78 +1,54 @@
-
 {% extends "todo_app/base.html" %}
+{% load form_tags %}
 
 {% block title %}
-  CREATE PAGE
+  Create To-Do
 {% endblock title %}
 
 {% block content %}
-<div class="jumbotron jumbotron-fluid">
-  <div class="container">
-    <h1 class="display-4 text-center">TO-DO LIST</h1>
-    <p class="lead text-center">This is To-Do list for Python Django Web Development</p>
-
-    <form method="POST">
-      {% csrf_token %}
-
-      <div class="form-group row mt-3">
-        <label class="col-sm-2 col-form-label">To-Do Title</label>
-        <div class="col-sm-10">
-          <input type="text" name="title" class="form-control" value="{{ form.title.value|default_if_none:'' }}">
-        </div>
-      </div>
-
-      <div class="form-group row mt-3">
-        <label class="col-sm-2 col-form-label">Description</label>
-        <div class="col-sm-10">
-          <input type="text" name="description" class="form-control" value="{{ form.description.value|default_if_none:'' }}">
-        </div>
-      </div>
-
-      <div class="form-group row mt-3">
-        <label class="col-sm-2 col-form-label">Deadline</label>
-        <div class="col-sm-10">
-          <input type="datetime-local" name="deadline" class="form-control" value="{{ form.deadline.value|date:'Y-m-d\TH:i' }}">
-        </div>
-      </div>
-
-      <div class="form-group row mt-3">
-        <label class="col-sm-2 col-form-label">Category</label>
-        <div class="col-sm-10">
-          <select name="category" class="form-select">
-            {% for cat in form.fields.category.queryset %}
-              <option value="{{ cat.id }}" {% if form.category.value|stringformat:"s" == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group row mt-3 ">
-    <label class="col-sm-2 col-form-label" for="id_is_private">Is Private</label>
-        <div class="col-sm-10">
-            <div class="form-check ">
-                <input class="form-check-input" type="checkbox" name="is_private" {{ form.is_private }}>
-                <label class="form-check-label" for="id_is_private">Only visible to me</label>
-            </div>
-        </div>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-success text-white">
+      <h4 class="mb-0">Create New To-Do</h4>
     </div>
+    <div class="card-body">
+      <form method="POST" novalidate>
+        {% csrf_token %}
 
-
-      <div class="form-group row mt-3">
-        <label class="col-sm-2 col-form-label">Is Finished?</label>
-        <div class="col-sm-10">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="finished" {% if form.finished.value %}checked{% endif %}>
-            <label class="form-check-label">Yes</label>
-          </div>
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.title.id_for_label }}">To-Do Title</label>
+          {{ form.title|add_class:"form-control" }}
         </div>
-      </div>
 
-      <div class="form-group row mt-4">
-        <div class="col-sm-10 offset-sm-2">
-          <button type="submit" class="btn btn-success">Add to List</button>
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.description.id_for_label }}">Description</label>
+          {{ form.description|add_class:"form-control" }}
         </div>
-      </div>
-    </form>
+
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.deadline.id_for_label }}">Deadline</label>
+          {{ form.deadline|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.category.id_for_label }}">Category</label>
+          {{ form.category|add_class:"form-select" }}
+        </div>
+
+        <div class="form-check mb-3">
+          {{ form.is_private }}
+          <label class="form-check-label ms-2" for="id_is_private">Only visible to me</label>
+        </div>
+
+        <div class="form-check mb-4">
+          {{ form.finished }}
+          <label class="form-check-label ms-2" for="id_finished">Mark as Finished</label>
+        </div>
+
+        <button type="submit" class="btn btn-success">Add to List</button>
+        <a href="{% url 'index' %}" class="btn btn-secondary ms-2">Cancel</a>
+      </form>
+    </div>
   </div>
 </div>
 {% endblock content %}

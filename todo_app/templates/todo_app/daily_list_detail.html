@@ -1,0 +1,168 @@
+{% extends "todo_app/base.html" %}
+{% load form_tags %}
+
+{% block title %}
+  {{ daily_list.name }} - Daily Tasks
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+  <!-- Başlık -->
+  <div class="text-center mb-4">
+    <h2>{{ daily_list.name }}</h2>
+    <p class="text-muted">{{ daily_list.date }}</p>
+  </div>
+
+  <!-- Add New Task Button -->
+  <div class="text-end mb-3">
+    <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#addTaskForm">
+      + Add New Task
+    </button>
+  </div>
+
+  <!-- Add Task Form (Collapsible) -->
+  <div class="collapse" id="addTaskForm">
+    <div class="card shadow-sm mb-5">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">Add New Task</h5>
+      </div>
+      <div class="card-body">
+        <form method="POST" novalidate>
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{ form.title.label_tag }}
+              {{ form.title|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3">
+              {{ form.deadline.label_tag }}
+              {{ form.deadline|add_class:"form-control" }}
+            </div>
+          </div>
+          <div class="mb-3">
+            {{ form.description.label_tag }}
+            {{ form.description|add_class:"form-control" }}
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="form-check">
+                {{ form.finished|add_class:"form-check-input" }}
+                <label class="form-check-label" for="{{ form.finished.id_for_label }}">Is Finished?</label>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="form-check">
+                {{ form.is_private|add_class:"form-check-input" }}
+                <label class="form-check-label" for="{{ form.is_private.id_for_label }}">Only visible to me</label>
+              </div>
+            </div>
+          </div>
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary">Add Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasks List -->
+  {% if todo_list %}
+    {% for todo in todo_list %}
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <a href="{% url 'description' todo.id %}" class="text-decoration-none text-dark fw-bold">
+            {{ todo.title }}
+          </a>
+          <small class="text-muted">{{ todo.deadline|date:"Y-m-d H:i" }}</small>
+        </div>
+        <div class="card-body">
+          {% if todo.description %}
+            <p class="text-muted">{{ todo.description }}</p>
+          {% endif %}
+
+          <!-- Subtasks -->
+          {% if todo.items.all %}
+            <ul class="list-group mb-3">
+              {% for item in todo.items.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span>{{ item.text }}</span>
+                  <div class="btn-group">
+                    <!-- Toggle Done AJAX -->
+                    <button type="button" class="btn btn-sm toggle-btn {% if item.done %}btn-success{% else %}btn-outline-secondary{% endif %}" data-id="{{ item.id }}">
+                      {% if item.done %}Done{% else %}Not Done{% endif %}
+                    </button>
+                    <a href="{% url 'update_subtask' item.id %}" class="btn btn-warning btn-sm">Update</a>
+                    <button type="button" class="btn btn-danger btn-sm delete-subtask" data-id="{{ item.id }}">Delete</button>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">No subtasks found for this task.</p>
+          {% endif %}
+
+          <a href="{% url 'add_todo_item' todo.id %}?next={% url 'daily_list_detail' daily_list.id %}" class="btn btn-outline-success btn-sm mt-2">+ Add Subtask</a>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-center text-muted mt-5">No tasks in this list yet.</p>
+  {% endif %}
+
+  <div class="text-center mt-5">
+    <a href="{% url 'index' %}" class="btn btn-secondary">← Back to Home</a>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const csrfToken = "{{ csrf_token }}";
+
+    // Toggle Done Button
+    document.querySelectorAll(".toggle-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const itemId = btn.getAttribute("data-id");
+
+        fetch(`/toggle_subtask_done/${itemId}/`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            btn.classList.toggle("btn-success");
+            btn.classList.toggle("btn-outline-secondary");
+            btn.textContent = data.done ? "Done" : "Not Done";
+          }
+        });
+      });
+    });
+
+    // Delete Subtask
+    document.querySelectorAll(".delete-subtask").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const itemId = btn.getAttribute("data-id");
+
+        if (confirm("Are you sure you want to delete this subtask?")) {
+          fetch(`/delete_subtask/${itemId}/`, {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": csrfToken,
+            },
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const subtaskElement = btn.closest("li");
+              if (subtaskElement) subtaskElement.remove();
+            }
+          });
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

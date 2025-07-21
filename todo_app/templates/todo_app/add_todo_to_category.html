@@ -1,61 +1,55 @@
 {% extends "todo_app/base.html" %}
+{% load form_tags %}
 
 {% block title %}
-   Add To-Do PAGE
+  Add To-Do PAGE
 {% endblock title %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2>Add To-Do for Category: {{ category.name }}</h2>
-  <form method="POST">
-    {% csrf_token %}
-
-    <div class="form-group row mt-3">
-      <label class="col-sm-2 col-form-label">To-Do Title</label>
-      <div class="col-sm-10">
-        {{ form.title }}
-      </div>
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-warning text-dark">
+      <h4 class="mb-0">Add To-Do for Category: {{ category.name }}</h4>
     </div>
+    <div class="card-body">
+      <form method="POST" novalidate>
+        {% csrf_token %}
 
-    <div class="form-group row mt-3">
-      <label class="col-sm-2 col-form-label">Description</label>
-      <div class="col-sm-10">
-        {{ form.description }}
-      </div>
-    </div>
-
-    <div class="form-group row mt-3">
-      <label class="col-sm-2 col-form-label">Deadline</label>
-      <div class="col-sm-10">
-        {{ form.deadline }}
-      </div>
-    </div>
-
-    <div class="form-group row mt-3">
-      <label class="col-sm-2 col-form-label">Is Finished?</label>
-      <div class="col-sm-10">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" name="finished" {% if form.finished.value %}checked{% endif %}>
-          <label class="form-check-label">Yes</label>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group row mt-3 ">
-    <label class="col-sm-2 col-form-label" for="id_is_private">Is Private</label>
-        <div class="col-sm-10">
-            <div class="form-check ">
-                <input class="form-check-input" type="checkbox" name="is_private" {{ form.is_private }}>
-                <label class="form-check-label" for="id_is_private">Only visible to me</label>
+        {# Normal alanlar #}
+        {% for field in form %}
+          {% if not field.field.widget.input_type == "checkbox" %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <div class="text-danger small mt-1">
+                  {{ field.errors|striptags }}
+                </div>
+              {% endif %}
             </div>
-        </div>
-    </div>
+          {% endif %}
+        {% endfor %}
 
-    <div class="form-group row mt-4">
-      <div class="col-sm-10 offset-sm-2">
+        {# Checkbox alanlar #}
+        {% for field in form %}
+          {% if field.field.widget.input_type == "checkbox" %}
+            <div class="form-check mb-3">
+              {{ field }}
+              <label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>
+              {% if field.errors %}
+                <div class="text-danger small mt-1">
+                  {{ field.errors|striptags }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+
         <button type="submit" class="btn btn-warning">Add To-Do</button>
-      </div>
+        <a href="{% url 'category_view' category.id %}" class="btn btn-secondary ms-2">Cancel</a>
+      </form>
+
     </div>
-  </form>
+  </div>
 </div>
 {% endblock %}

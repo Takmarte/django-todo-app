@@ -1,31 +1,21 @@
+
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
 from unfold.admin import ModelAdmin
-from .models import Todos, Category
-# Register your models here.
+from .models import Category, DailyTodoList, Todos, TodoItem
 
-@admin.register(Todos)
-class TodosAdmin(ModelAdmin):
-    list_display = ("title", "user", "is_private", "finished", "date")
-    list_filter = ("is_private", "finished", "user", "category")
-    search_fields = ("title", "user", "description")
+class TodoItemInline(admin.TabularInline):
+    model = TodoItem
+    extra = 1
+    fields = ('text', 'done')
+    show_change_link = True
 
-    
 class TodoInline(admin.TabularInline):
     model = Todos
-    fields = ('linked_title', 'finished', 'deadline', 'user')
-    readonly_fields = ('linked_title', 'finished', 'deadline', 'user')
     extra = 0
-    can_delete = False
-    verbose_name_plural = "Related To-Dos"
-    
-    def linked_title(self, obj):
-        if obj.id:
-            url = reverse('admin:todo_app_todos_change', args=[obj.id])
-            return format_html('<a href="{}">{}</a>', url, obj.title)
-        return "-"
-    linked_title.short_description = "Title"
+    fields = ('title', 'finished', 'is_private', 'deadline')
+    show_change_link = True
 
 class SubCategoryInline(admin.TabularInline):
     model = Category
@@ -34,19 +24,40 @@ class SubCategoryInline(admin.TabularInline):
     readonly_fields = ('linked_name',)
     extra = 0
     verbose_name_plural = "Subcategories"
-    
+
     def linked_name(self, obj):
         url = reverse("admin:todo_app_category_change", args=[obj.id])
         return format_html('<a href="{}">{}</a>', url, obj.name)
-    linked_name.short_description = "Subcategory"    
-    
-@admin.register(Category)
-class CategoryAdmin(ModelAdmin):
-    list_display = ("name", "show_subcategories")
-    search_fields = ("name",)
-    ordering = ("parent__name", "name")
-    inlines = [SubCategoryInline, TodoInline]
+    linked_name.short_description = "Subcategory"
 
-    def show_subcategories(self, obj):
-        return ", ".join([child.name for child in obj.subcategories.all()]) or "-"
-    show_subcategories.short_description = "Subcategories"
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'parent')
+    search_fields = ('name',)
+    list_filter = ('parent',)
+    ordering = ('name',)
+    inlines = [SubCategoryInline]
+
+@admin.register(DailyTodoList)
+class DailyTodoListAdmin(admin.ModelAdmin):
+    list_display = ('name', 'user', 'date', 'category')
+    list_filter = ('date', 'user', 'category')
+    search_fields = ('name', 'user__username')
+    inlines = [TodoInline]
+    ordering = ('-date',)
+
+@admin.register(Todos)
+class TodosAdmin(ModelAdmin):
+    list_display = ('title', 'daily_list', 'finished', 'is_private', 'deadline', 'date_created', 'finished_date')
+    search_fields = ('title', 'description')
+    list_filter = ('finished', 'is_private', 'deadline', 'daily_list__user')
+    date_hierarchy = 'date_created'
+    inlines = [TodoItemInline]
+    ordering = ('-date_created',)
+
+@admin.register(TodoItem)
+class TodoItemAdmin(admin.ModelAdmin):
+    list_display = ('text', 'todo', 'done')
+    list_filter = ('done', 'todo')
+    search_fields = ('text',)
+    ordering = ('todo',)

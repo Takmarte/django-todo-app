@@ -8,21 +8,23 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4">User Information</h2>
 
-  <div class="card shadow-sm">
+  <div class="card shadow-sm mx-auto" style="max-width: 500px;">
     <div class="card-body">
-      <p><strong>Username:</strong> {{ user.username }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Date Joined:</strong> {{ user.date_joined|date:"Y-m-d H:i" }}</p>
-      <p><strong>First Name:</strong> {{ user.first_name|default:"-" }}</p>
-      <p><strong>Last Name:</strong> {{ user.last_name|default:"-" }}</p>  
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Username:</strong> {{ user.username }}</li>
+        <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+        <li class="list-group-item"><strong>Date Joined:</strong> {{ user.date_joined|date:"Y-m-d H:i" }}</li>
+        <li class="list-group-item"><strong>First Name:</strong> {{ user.first_name|default:"-" }}</li>
+        <li class="list-group-item"><strong>Last Name:</strong> {{ user.last_name|default:"-" }}</li>
+      </ul>
     </div>
   </div>
 
-  <div class="text-center mt-4">
-    <a href="{% url 'index' %}" class="btn btn-primary me-2">Back to Home</a>
+  <div class="text-center mt-4 d-flex justify-content-center gap-3 flex-wrap">
+    <a href="{% url 'index' %}" class="btn btn-primary">Back to Home</a>
 
     {% if user.is_authenticated %}
-      <form method="POST" action="{% url 'logout' %}" class="d-inline">
+      <form method="POST" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Logout</button>
       </form>

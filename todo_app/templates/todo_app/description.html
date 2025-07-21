@@ -1,44 +1,211 @@
-
 {% extends "todo_app/base.html" %}
-
-{% block title %}
-    Task Detail PAGE
-{% endblock title %}
+{% block title %} Task Detail {% endblock title %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-body">
-            <h1 class="card-title text-center">{{ todo.title }}</h1>
-            <p class="card-text">{{ todo.description }}</p>
+<div class="container my-5">
+  <div class="card shadow">
+    <div class="card-body">
 
-            <ul class="list-group list-group-flush mt-3">
-                <li class="list-group-item"><strong>Create Date:</strong> {{ todo.date }}</li>
-                <li class="list-group-item"><strong>Deadline:</strong> {{ todo.deadline }}</li>
-                <li class="list-group-item">
-                    <strong>Is Finished?:</strong>
-                    {% if todo.finished %}
-                        <a class="btn btn-success btn-sm ms-2" href="{% url 'yes_finish' todo.id %}">Yes</a>
-                    {% else %}
-                        <a class="btn btn-danger btn-sm ms-2" href="{% url 'no_finish' todo.id %}">No</a>
-                    {% endif %}
-                </li>
-                <li class="list-group-item">
-                    <strong>Finished at:</strong>
-                    {% if todo.finished_date %}
-                        {{ todo.finished_date }}
-                    {% else %}
-                        Not finished yet
-                    {% endif %}
-                </li>
-            </ul>
+      <h2 class="text-center">{{ todo.title }}</h2>
+      {% if todo.description %}
+        <p class="text-muted text-center">{{ todo.description }}</p>
+      {% endif %}
 
-            <div class="text-center mt-4">
-                <a class="btn btn-warning me-2" href="{% url 'update' todo.id %}">Update</a>
-                <a class="btn btn-danger me-2" href="{% url 'delete' todo.id %}">Delete</a>
-                <a class="btn btn-primary" href="{% url 'index' %}">Back to List</a>
+      <ul class="list-group list-group-flush mt-4">
+        <li class="list-group-item"><strong>Create Date:</strong> {{ todo.date_created }}</li>
+        <li class="list-group-item"><strong>Deadline:</strong> {{ todo.deadline|date:"Y-m-d H:i" }}</li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span><strong>Is Finished?:</strong></span>
+          {% if todo.finished %}
+            <a class="btn btn-success btn-sm" href="{% url 'yes_finish' todo.id %}">Yes</a>
+          {% else %}
+            <a class="btn btn-outline-danger btn-sm" href="{% url 'no_finish' todo.id %}">No</a>
+          {% endif %}
+        </li>
+        <li class="list-group-item">
+          <strong>Finished at:</strong>
+          {% if todo.finished_date %}
+            {{ todo.finished_date|date:"Y-m-d H:i" }}
+          {% else %}
+            <span class="text-muted">Not finished yet</span>
+          {% endif %}
+        </li>
+      </ul>
+
+  
+      <h4 class="mt-5">Subtasks</h4>
+      <ul class="list-group mt-3" id="subtask-list">
+        {% for item in todo_items %}
+          <li class="list-group-item d-flex justify-content-between align-items-center" data-id="{{ item.id }}">
+            <span>{{ item.text }}</span>
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm toggle-subtask-btn {% if item.done %}btn-success{% else %}btn-outline-secondary{% endif %}" data-id="{{ item.id }}">
+                {% if item.done %}Done{% else %}Not Done{% endif %}
+              </button>
+              <a href="{% url 'update_subtask' item.id %}" class="btn btn-warning btn-sm">Update</a>
+              <button type="button" class="btn btn-danger btn-sm delete-subtask-btn" data-id="{{ item.id }}">Delete</button>
             </div>
+          </li>
+        {% empty %}
+          <p class="text-muted mt-3">No subtasks found for this task.</p>
+        {% endfor %}
+      </ul>
+
+    
+      <div class="text-center mt-4">
+        <button class="btn btn-outline-success btn-sm" id="show-form-btn">+ Add Subtask</button>
+
+        <div id="subtask-form-container" class="mt-3" style="display:none;">
+            <form id="subtask-form">
+            {% csrf_token %}
+            <input type="text" id="subtask-text" name="text" class="form-control" placeholder="Subtask description">
+            <button type="submit" class="btn btn-success btn-sm mt-2">Save</button>
+            </form>
         </div>
+       </div>
+
+      
+      <div class="text-center mt-4">
+        <div class="d-flex justify-content-center flex-wrap gap-2">
+          <a class="btn btn-warning" href="{% url 'update' todo.id %}">Update</a>
+          <form method="POST" action="{% url 'delete' todo.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+          <a class="btn btn-primary" href="{% url 'category_view' todo.daily_list.category.id %}">Back to List</a>
+        </div>
+      </div>
+
     </div>
+  </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const csrfToken = "{{ csrf_token }}";
+    const todoId = "{{ todo.id }}";
+
+    // ✅ Tüm eventleri baştan temizleyip yeniden ekle
+    function refreshAllEventListeners() {
+      attachToggleEvents();
+      attachDeleteEvents();
+      attachUpdateEvents();
+    }
+
+    // ✅ Done / Not Done toggle işlemi
+    function attachToggleEvents() {
+      document.querySelectorAll(".toggle-subtask-btn").forEach(button => {
+        button.removeEventListener("click", handleToggle);
+        button.addEventListener("click", handleToggle);
+      });
+    }
+
+    function handleToggle(e) {
+      const id = this.dataset.id;
+      const button = this;
+
+      fetch(`/toggle_subtask_done/${id}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": csrfToken }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          button.classList.toggle("btn-success", data.done);
+          button.classList.toggle("btn-outline-secondary", !data.done);
+          button.textContent = data.done ? "Done" : "Not Done";
+        }
+      });
+    }
+
+    // ✅ Delete işlemi
+    function attachDeleteEvents() {
+      document.querySelectorAll(".delete-subtask-btn").forEach(button => {
+        button.removeEventListener("click", handleDelete);
+        button.addEventListener("click", handleDelete);
+      });
+    }
+
+    function handleDelete(e) {
+      const id = this.dataset.id;
+      const li = this.closest("li");
+      if (confirm("Delete this subtask?")) {
+        fetch(`/delete_subtask/${id}/`, {
+          method: "POST",
+          headers: { "X-CSRFToken": csrfToken }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) li.remove();
+        });
+      }
+    }
+
+    // ✅ Update işlemi için yönlendirme
+    function attachUpdateEvents() {
+      document.querySelectorAll(".update-subtask-btn").forEach(button => {
+        button.removeEventListener("click", handleUpdate);
+        button.addEventListener("click", handleUpdate);
+      });
+    }
+
+    function handleUpdate(e) {
+      const id = this.dataset.id;
+      window.location.href = `/update_subtask/${id}/`; // Sayfaya yönlendir
+    }
+
+    // ✅ Sayfa yüklenince mevcutlara event bağla
+    refreshAllEventListeners();
+
+    // ✅ Formu aç/kapat
+    document.getElementById("show-form-btn").addEventListener("click", function () {
+      const form = document.getElementById("subtask-form-container");
+      form.style.display = form.style.display === "none" ? "block" : "none";
+    });
+
+    // ✅ Yeni subtask ekleme
+    document.getElementById("subtask-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const text = document.getElementById("subtask-text").value.trim();
+      if (!text) return;
+
+      fetch(`/add_todo_item/${todoId}/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrfToken,
+          "X-Requested-With": "XMLHttpRequest",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({ text })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const li = document.createElement("li");
+          li.className = "list-group-item d-flex justify-content-between align-items-center";
+          li.setAttribute("data-id", data.id);
+          li.innerHTML = `
+            <span>${data.text}</span>
+            <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-outline-secondary toggle-subtask-btn" data-id="${data.id}">Not Done</button>
+              <button type="button" class="btn btn-warning btn-sm update-subtask-btn" data-id="{{ item.id }}">Update</button>
+              <button type="button" class="btn btn-danger btn-sm delete-subtask-btn" data-id="${data.id}">Delete</button>
+            </div>
+          `;
+          document.getElementById("subtask-list").appendChild(li);
+          document.getElementById("subtask-text").value = "";
+          document.getElementById("subtask-form-container").style.display = "none";
+
+          // Yeni gelen butonlara da event bağla
+          refreshAllEventListeners();
+        } else {
+          alert(data.error || "Bir hata oluştu.");
+        }
+      });
+    });
+  });
+</script>
+
+
 {% endblock content %}
