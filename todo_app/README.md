@@ -4,22 +4,32 @@ This is a standalone Django application within a larger internship project that 
 
 ---
 
-🔧 Features
-📅 Daily Task Lists: Create separate to-do lists for each day
+## 🔧 Features
 
-📌 Task Management: Add, update, and delete tasks within a daily list
 
-🧩 Subtasks: Break tasks into subtasks and track them individually
+- 📅 Daily Task Lists: Create separate to-do lists for each day
 
-📊 Progress Tracking: Visual progress bars reflect subtask completion status
 
-📂 Hierarchical Categories: Group daily lists under nested categories
+- 📌 Task Management: Add, update, and delete tasks within a daily list
 
-🔐 Private Tasks: Mark tasks as private (visible only to the owner)
 
-🛡️ Admin Access: Superusers can view all tasks regardless of privacy setting
+- 🧩 Subtasks: Break tasks into subtasks and track them individually
 
-🔁 Interactive UI:
+
+- 📊 Progress Tracking: Visual progress bars reflect subtask completion status
+
+
+- 📂 Hierarchical Categories: Group daily lists under nested categories
+
+
+- 🔐 Private Tasks: Mark tasks as private (visible only to the owner)
+
+
+- 🛡️ Admin Access: Superusers can view all tasks regardless of privacy setting
+
+
+- 🔁 Interactive UI:
+ 
 
 Toggle task/subtask status with AJAX
 
@@ -27,15 +37,15 @@ Dynamic collapsible “Add” buttons for tasks and subtasks
 
 Real-time updates without page reload
 
-⏰ Deadline Support: Optional fields for due dates and completion dates
 
-🌐 JWT Authentication: Basic token-based authentication setup for API endpoints
+- ⏰ Deadline Support: Optional fields for due dates and completion dates
 
-🎨 Clean & Responsive UI: Built with Bootstrap and custom styles
+
+- 🎨 Clean & Responsive UI: Built with Bootstrap and custom styles
 
 ---
 
-#### 🔍 Interface Overview
+### 🔍 Interface Overview
 
 ### 🔑 Login Page
 Enables users to log in with their credentials.
@@ -59,6 +69,8 @@ Lists to-dos for the logged-in user. Admins can see all tasks.
 
 ### ➕ Create To-Do
 Allows creation of a new to-do, category selection, and optional privacy marking.
+
+![Create To-Do ](screenshots/createtodocategoryhtml.png)
 
 ### ✏️ Update To-Do
 Update a task's title, description, deadline, or finished state.
@@ -94,12 +106,6 @@ Displays the detailed description of a selected to-do item.
 Shows the details of a specific daily to-do list, including all tasks and their statuses.
 
 ![Daily List Detail](screenshots/dailyhtml.png)
-
-### 🆕 Create To-Do Category
-Add a new category for organizing your to-dos.
-
-![Create To-Do Category](screenshots/createtodocategoryhtml.png)
-
 
 ### 🔄 Update Category
 Modify the name or details of an existing category.
