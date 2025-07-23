@@ -113,54 +113,60 @@ JWT (djangorestframework-simplejwt)
 =======
 
 
-🔍 Project Details
-This application is a simple but structured daily task management system built with Django. It allows users to create categorized task lists for each day, add subtasks, and track their completion status dynamically. The key components of the system are as follows:
+## 🔍 Project Details
+   This application is a simple but structured daily task management system built with Django. It allows users to create categorized task lists for each day, add subtasks, and track their completion status dynamically. The key components of the system are as    
+follows:
+
 
 🗂️ Category System
-Tasks are grouped under a hierarchical category structure.
+- Tasks are grouped under a hierarchical category structure.
 
-Each category can optionally have a parent category (self-referencing model).
+- Each category can optionally have a parent category (self-referencing model).
 
-Categories are linked to daily task lists, enabling filtered task views per category.
+- Categories are linked to daily task lists, enabling filtered task views per category.
+
 
 ✅ Daily To-Do Lists
-Each user can create a separate to-do list for each day.
+- Each user can create a separate to-do list for each day.
 
-A daily list is associated with a specific category.
+- A daily list is associated with a specific category.
 
-Users can add tasks to each daily list, and these tasks are further divided into subtasks.
+- Users can add tasks to each daily list, and these tasks are further divided into subtasks.
+
 
 📌 Tasks and Subtasks
-Every daily to-do list contains multiple tasks (Todos).
+- Every daily to-do list contains multiple tasks (Todos).
 
-Each task can contain one or more subtasks (TodoItems).
+- Each task can contain one or more subtasks (TodoItems).
 
-When all subtasks are marked as done, the parent task is automatically marked as finished.
+- When all subtasks are marked as done, the parent task is automatically marked as finished.
 
-Tasks can be marked as private, in which case they are only visible to their owner.
+- Tasks can be marked as private, in which case they are only visible to their owner.
 
-Admin users have access to all tasks, including private ones.
+- Admin users have access to all tasks, including private ones.
+
 
 📈 Progress Tracking
-A progress bar is displayed for each task based on the completion percentage of its subtasks.
+- A progress bar is displayed for each task based on the completion percentage of its subtasks.
 
-This value is dynamically calculated using a custom progress method on the model.
+- This value is dynamically calculated using a custom progress method on the model.
+
 
 ⚙️ Dynamic Interaction with AJAX
-Key operations such as toggling task/subtask status, adding or deleting subtasks, and creating new tasks are performed without reloading the page.
+- Key operations such as toggling task/subtask status, adding or deleting subtasks, and creating new tasks are performed without reloading the page.
 
-This enhances the user experience with real-time updates and responsiveness.
+- This enhances the user experience with real-time updates and responsiveness.
 
-Toggle buttons such as Done/Not Done and Finished (Yes/No) are handled asynchronously.
+- Toggle buttons such as Done/Not Done and Finished (Yes/No) are handled asynchronously.
 
 Interactive Features:
 
-Some pages include interactive collapsible forms for adding new subtasks or tasks.
+- Some pages include interactive collapsible forms for adding new subtasks or tasks.
 
-These forms are initially hidden and appear dynamically when the user clicks an “Add” or “+” button.
+- These forms are initially hidden and appear dynamically when the user clicks an “Add” or “+” button.
 
-Once a new task or subtask is added, it is appended to the list immediately using JavaScript, without refreshing the page.
+- Once a new task or subtask is added, it is appended to the list immediately using JavaScript, without refreshing the page.
 
-This approach provides a clean interface by avoiding clutter and only showing forms when needed.
+- This approach provides a clean interface by avoiding clutter and only showing forms when needed.
 
 
