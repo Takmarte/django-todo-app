@@ -70,6 +70,8 @@ Lists to-dos for the logged-in user. Admins can see all tasks.
 ### ➕ Create To-Do
 Allows creation of a new to-do, category selection, and optional privacy marking.
 
+![Create To-Do ](screenshots/createtodocategoryhtml.png)
+
 ### ✏️ Update To-Do
 Update a task's title, description, deadline, or finished state.
 
@@ -104,12 +106,6 @@ Displays the detailed description of a selected to-do item.
 Shows the details of a specific daily to-do list, including all tasks and their statuses.
 
 ![Daily List Detail](screenshots/dailyhtml.png)
-
-### 🆕 Create To-Do Category
-Add a new category for organizing your to-dos.
-
-![Create To-Do Category](screenshots/createtodocategoryhtml.png)
-
 
 ### 🔄 Update Category
 Modify the name or details of an existing category.
