@@ -4,22 +4,32 @@ This is a standalone Django application within a larger internship project that 
 
 ---
 
-🔧 Features
-📅 Daily Task Lists: Create separate to-do lists for each day
+## 🔧 Features
 
-📌 Task Management: Add, update, and delete tasks within a daily list
 
-🧩 Subtasks: Break tasks into subtasks and track them individually
+-📅 Daily Task Lists: Create separate to-do lists for each day
 
-📊 Progress Tracking: Visual progress bars reflect subtask completion status
 
-📂 Hierarchical Categories: Group daily lists under nested categories
+-📌 Task Management: Add, update, and delete tasks within a daily list
 
-🔐 Private Tasks: Mark tasks as private (visible only to the owner)
 
-🛡️ Admin Access: Superusers can view all tasks regardless of privacy setting
+-🧩 Subtasks: Break tasks into subtasks and track them individually
 
-🔁 Interactive UI:
+
+-📊 Progress Tracking: Visual progress bars reflect subtask completion status
+
+
+-📂 Hierarchical Categories: Group daily lists under nested categories
+
+
+-🔐 Private Tasks: Mark tasks as private (visible only to the owner)
+
+
+-🛡️ Admin Access: Superusers can view all tasks regardless of privacy setting
+
+
+-🔁 Interactive UI:
+
 
 Toggle task/subtask status with AJAX
 
@@ -27,11 +37,11 @@ Dynamic collapsible “Add” buttons for tasks and subtasks
 
 Real-time updates without page reload
 
-⏰ Deadline Support: Optional fields for due dates and completion dates
 
-🌐 JWT Authentication: Basic token-based authentication setup for API endpoints
+-⏰ Deadline Support: Optional fields for due dates and completion dates
 
-🎨 Clean & Responsive UI: Built with Bootstrap and custom styles
+
+-🎨 Clean & Responsive UI: Built with Bootstrap and custom styles
 
 ---
 
