@@ -114,6 +114,14 @@
           button.classList.toggle("btn-success", data.done);
           button.classList.toggle("btn-outline-secondary", !data.done);
           button.textContent = data.done ? "Done" : "Not Done";
+          // Update progress bar and finished status
+          if (document.getElementById("progress-bar")) {
+            document.getElementById("progress-bar").style.width = data.progress + "%";
+            document.getElementById("progress-bar").textContent = data.progress + "%";
+          }
+          if (document.getElementById("todo-status")) {
+            document.getElementById("todo-status").textContent = data.finished ? "Finished!" : "Not finished";
+          }
         }
       });
     }

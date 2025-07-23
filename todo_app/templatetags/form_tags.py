@@ -5,7 +5,7 @@ register = template.Library()
 @register.filter(name='add_class')
 def add_class(field, css):
     widget = field.field.widget
-    input_type = getattr(widget, 'input_type', None)  # Güvenli şekilde input_type al
+    input_type = getattr(widget, 'input_type', None)
 
     if input_type != 'checkbox':
         existing_classes = widget.attrs.get('class', '')

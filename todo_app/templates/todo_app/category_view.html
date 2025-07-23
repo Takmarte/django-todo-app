@@ -165,5 +165,48 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
+// Example: If you want to allow toggling subtasks from category view, you need to render subtasks and their toggle buttons in the table, or as a modal/dropdown per todo row.
+// For now, add a function to update progress and finished status after toggling a subtask.
+
+// If you render subtasks inline, you can use something like this:
+// (Assume you have a button with class 'toggle-subtask-btn' and data-item-id and data-todo-id)
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll('.toggle-subtask-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      const itemId = this.dataset.itemId;
+      const todoId = this.dataset.todoId;
+      const btn = this;
+      fetch(`/toggle_subtask_done_category/${itemId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          btn.textContent = data.done ? 'Done' : 'Not Done';
+          btn.classList.toggle('btn-success', data.done);
+          btn.classList.toggle('btn-outline-secondary', !data.done);
+          // Update progress bar and finished status for the parent todo
+          const progressBar = document.querySelector(`#progress-bar-${todoId}`);
+          if (progressBar) {
+            progressBar.style.width = data.progress + '%';
+            progressBar.textContent = data.progress + '%';
+          }
+          const statusCell = document.querySelector(`#todo-status-${todoId}`);
+          if (statusCell) {
+            statusCell.textContent = data.finished ? 'Yes' : 'No';
+            statusCell.classList.toggle('text-success', data.finished);
+            statusCell.classList.toggle('text-danger', !data.finished);
+          }
+        }
+      });
+    });
+  });
+});
+
 </script>
 {% endblock %}

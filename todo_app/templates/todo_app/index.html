@@ -32,7 +32,7 @@
               <div class="accordion-body">
                 <div class="d-flex flex-wrap gap-2 mb-3">
                   {% for subcat in categories %}
-                    {% if subcat.parent == cat %}
+                    {% if subcat.parent_id == cat.id %}
                       <a href="{% url 'category_view' subcat.id %}" class="btn btn-sm btn-outline-secondary">
                         {{ subcat.name }}
                       </a>

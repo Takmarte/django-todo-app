@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime,timezone
 from django.utils.timezone import now
+from django.utils import timezone
 # Create your models here.
 
 
@@ -44,7 +45,6 @@ class Todos(models.Model):
         return int((done / total) * 100)
 
     def update_finished_status(self):
-        """Tüm alt görevler tamamlandıysa otomatik olarak finished=True yapar."""
         items = self.items.all()
         if items.exists() and all(item.done for item in items):
             self.finished = True
@@ -57,11 +57,23 @@ class Todos(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = "Todo"
+        verbose_name_plural = "Todos"
+
 
 class TodoItem(models.Model):
     todo = models.ForeignKey(Todos, related_name="items", on_delete=models.CASCADE)
     text = models.CharField(max_length=255)
     done = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.todo.update_finished_status()
+
     def __str__(self):
         return self.text
+
+    class Meta:
+        verbose_name = "Todo item"
+        verbose_name_plural = "Todo items"

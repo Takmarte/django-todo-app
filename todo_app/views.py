@@ -49,6 +49,7 @@ def add_todo_to_daily_list(request, daily_list_id):
         if form.is_valid():
             todo = form.save(commit=False)
             todo.daily_list = daily_list
+            todo.user = request.user  # <-- Bunu ekliyorum
             if todo.finished and not todo.finished_date:
                 todo.finished_date = datetime.now()
             todo.save()
@@ -302,12 +303,19 @@ def delete_subtask(request, item_id):
     return JsonResponse({'success': False}, status=403)
 
 @require_POST
+@login_required
 def toggle_subtask_done(request, item_id):
     try:
         item = TodoItem.objects.get(id=item_id)
         item.done = not item.done
         item.save()
-        return JsonResponse({'success': True, 'done': item.done })
+        todo = item.todo
+        return JsonResponse({
+            'success': True,
+            'done': item.done,
+            'progress': todo.progress,
+            'finished': todo.finished,
+        })
     except TodoItem.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Item not found'}, status=404)
     
@@ -325,3 +333,20 @@ def toggle_finish_status(request, todo_id):
             return JsonResponse({'status': 'unauthorized'}, status=403)
     except Todos.DoesNotExist:
         return JsonResponse({'status': 'not found'}, status=404)
+
+@login_required
+@require_POST
+def toggle_subtask_done_category(request, item_id):
+    try:
+        item = TodoItem.objects.get(id=item_id)
+        item.done = not item.done
+        item.save()
+        todo = item.todo
+        return JsonResponse({
+            'success': True,
+            'done': item.done,
+            'progress': todo.progress,
+            'finished': todo.finished,
+        })
+    except TodoItem.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Item not found'}, status=404)
