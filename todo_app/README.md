@@ -1,22 +1,41 @@
 # 📂 To-Do App – Django Application
 
-This is a standalone Django application within the larger project that provides users with the ability to manage personal to-do tasks. It allows authenticated users to add, update, categorize, and delete their own to-dos. Superusers can see all to-dos, regardless of ownership.
+This is a standalone Django application within a larger internship project that enables users to manage their personal daily to-do tasks. Authenticated users can create categorized daily lists, add tasks with subtasks, and track their completion progress. Superusers (admins) have access to all content, including private tasks.
 
 ---
 
-## 🔧 Features
+🔧 Features
+📅 Daily Task Lists: Create separate to-do lists for each day
 
-- 📆 Create, update, and delete tasks
-- 🔑 Mark tasks as private or public
-- ⏰ Track deadlines and finished dates
-- 📂 Categorize to-dos
-- 🌟 Simple and styled UI using Bootstrap
+📌 Task Management: Add, update, and delete tasks within a daily list
+
+🧩 Subtasks: Break tasks into subtasks and track them individually
+
+📊 Progress Tracking: Visual progress bars reflect subtask completion status
+
+📂 Hierarchical Categories: Group daily lists under nested categories
+
+🔐 Private Tasks: Mark tasks as private (visible only to the owner)
+
+🛡️ Admin Access: Superusers can view all tasks regardless of privacy setting
+
+🔁 Interactive UI:
+
+Toggle task/subtask status with AJAX
+
+Dynamic collapsible “Add” buttons for tasks and subtasks
+
+Real-time updates without page reload
+
+⏰ Deadline Support: Optional fields for due dates and completion dates
+
+🌐 JWT Authentication: Basic token-based authentication setup for API endpoints
+
+🎨 Clean & Responsive UI: Built with Bootstrap and custom styles
 
 ---
 
-## 🔍 Interface Overview
-
-Below are the key pages of the todo_app interface. Each image is followed by a brief description. To display these screenshots properly in GitHub, place the images in a folder named `/screenshots/` at the root of your repository and reference them relatively.
+#### 🔍 Interface Overview
 
 ### 🔑 Login Page
 Enables users to log in with their credentials.
@@ -40,8 +59,6 @@ Lists to-dos for the logged-in user. Admins can see all tasks.
 
 ### ➕ Create To-Do
 Allows creation of a new to-do, category selection, and optional privacy marking.
-
-![Create To-Do](screenshots/createtodohtml.png)
 
 ### ✏️ Update To-Do
 Update a task's title, description, deadline, or finished state.
@@ -68,10 +85,15 @@ Static information page about the app.
 
 ![About](screenshots/abouthtml.png)
 
-### 🗂️ Subcategory View
-View and manage subcategories within a category.
+### 📝 To-Do Description Page
+Displays the detailed description of a selected to-do item.
 
-![Subcategory View](screenshots/subcategoryviewhtml.png)
+![To-Do Description](screenshots/descriptionhtml.png)
+
+### 🗓️ Daily List Detail
+Shows the details of a specific daily to-do list, including all tasks and their statuses.
+
+![Daily List Detail](screenshots/dailyhtml.png)
 
 ### 🆕 Create To-Do Category
 Add a new category for organizing your to-dos.
