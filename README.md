@@ -50,8 +50,16 @@ The project follows the standard Django layout:
 
 3. **Install the required packages:**
    ```bash
-   pip install django
+   pip install -r requirements.txt
    ```
+   asgiref==3.8.1  
+   Django==5.2.3  
+   django-unfold==0.62.0  
+   djangorestframework==3.16.0  
+   djangorestframework_simplejwt==5.5.0  
+   PyJWT==2.9.0  
+   sqlparse==0.5.3  
+   tzdata==2025.2
 
 4. **Run the development server:**
    ```bash
